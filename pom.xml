@@ -111,7 +111,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://github.com/kadasedode/scala_template</url>
+            <url>https://maven.pkg.github.com/KADA-SEDODE/scala_project.git</url>
         </repository>
     </distributionManagement>
 </project>
