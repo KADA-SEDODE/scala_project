@@ -11,7 +11,7 @@ import org.apache.spark.SparkConf
 import com.globalmentor.apache.hadoop.fs.BareLocalFileSystem
 import org.apache.hadoop.fs.FileSystem
 
-object Main extends App with Job {
+/*object Main extends App with Job {
 
   val cliArgs = args
   val MASTER_URL: String = try {
@@ -63,4 +63,30 @@ object Main extends App with Job {
   val processedDF: DataFrame = processor.process(inputDF)
   writer.write(processedDF, "overwrite", dst_path)
 
+}*/
+
+/*object Main extends App {
+  print("hello word")
+}*/
+
+object Main extends App {
+
+  val conf = new SparkConf()
+  conf.set("spark.driver.memory", "64M")
+  conf.set("spark.testing.memory", "471859200")
+
+  val sparkSession = SparkSession
+    .builder
+    .master("local")
+    .config(conf)
+    .appName("Scala Template")
+    .enableHiveSupport()
+    .getOrCreate()
+
+  sparkSession
+    .sparkContext
+    .hadoopConfiguration
+    .setClass("fs.file.impl",  classOf[BareLocalFileSystem], classOf[FileSystem])
+
+  print(sparkSession.sql("SELECT 'A'").show())
 }
