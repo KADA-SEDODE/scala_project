@@ -5,14 +5,17 @@ import java.io.File
 import scala.util.Try
 import java.util.Properties
 
+// Classe Writer pour gérer l'écriture des DataFrames dans des fichiers
 class Writer {
 
+  // Récupère le format de sortie à partir du fichier de propriétés (par défaut : csv)
   private def getOutputFormatFromProperties(): String = {
     val props = new Properties()
     props.load(getClass.getClassLoader.getResourceAsStream("application.properties"))
     props.getProperty("output.format", "csv") // par défaut csv
   }
 
+  // Écrit les données dans un fichier selon le format spécifié dans les propriétés
   def write(df: DataFrame, mode: String = "overwrite", outputDir: String, filename: String): Unit = {
     val format = getOutputFormatFromProperties()
 
@@ -47,6 +50,7 @@ class Writer {
         println(s"[INFO] Écriture Parquet terminée : $outputDir/${filename}_parquet")
 
       case other =>
+        // Lance une exception si le format de sortie n'est pas supporté
         throw new IllegalArgumentException(s"Format de sortie non supporté : $other")
     }
   }

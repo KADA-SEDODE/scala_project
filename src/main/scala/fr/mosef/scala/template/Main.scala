@@ -11,34 +11,25 @@ import org.apache.spark.SparkConf
 import com.globalmentor.apache.hadoop.fs.BareLocalFileSystem
 import org.apache.hadoop.fs.FileSystem
 
+// Point d'entrée principal de l'application Scala
 object Main extends App with Job {
 
+  // Récupération des arguments de ligne de commande
   val cliArgs = args
+
+  // Définition de l'URL Master Spark en fonction des arguments (ou valeur par défaut)
   val MASTER_URL: String = try {
     cliArgs(0)
   } catch {
-    case e: java.lang.ArrayIndexOutOfBoundsException => "local[1]"
+    case e: java.lang.ArrayIndexOutOfBoundsException => "local[1]" // Valeur par défaut pour exécution locale
   }
-  /*val SRC_PATH: String = try {
-    cliArgs(1)
-  } catch {
-    case e: java.lang.ArrayIndexOutOfBoundsException => {
-      print("No input defined")
-      sys.exit(1)
-    }
-  }
-  val DST_PATH: String = try {
-    cliArgs(2)
-  } catch {
-    case e: java.lang.ArrayIndexOutOfBoundsException => {
-      "./default/output-writer"
-    }
-  }*/
 
+  // Configuration Spark, incluant mémoire du driver et mémoire de test
   val conf = new SparkConf()
   conf.set("spark.driver.memory", "64M")
   conf.set("spark.testing.memory", "471859200")
 
+  // Création de la session Spark avec prise en charge Hive
   val sparkSession = SparkSession
     .builder
     .master(MASTER_URL)
@@ -47,17 +38,18 @@ object Main extends App with Job {
     .enableHiveSupport()
     .getOrCreate()
 
+  // Configuration du FileSystem pour utiliser BareLocalFileSystem
   sparkSession
     .sparkContext
     .hadoopConfiguration
     .setClass("fs.file.impl",  classOf[BareLocalFileSystem], classOf[FileSystem])
 
+  // Implémentations des interfaces Job
+  override val reader: Reader = new ReaderImpl(sparkSession) // Instancie ReaderImpl
+  override val processor: Processor = new ProcessorImpl()  // Instancie ProcessorImpl
+  override val writer: Writer = new Writer()  // Instancie Writer
 
-  override val reader: Reader = new ReaderImpl(sparkSession)
-  override val processor: Processor = new ProcessorImpl()
-  override val writer: Writer = new Writer()
-  /*  val src_path = SRC_PATH
-    val dst_path = DST_PATH*/
+  // Récupération des chemins d'entrée et de sortie à partir des propriétés
   override val src_path: String = reader.asInstanceOf[ReaderImpl].getInputPathFromProperties()
   override val dst_path: String = reader.asInstanceOf[ReaderImpl].getOutputPathFromProperties()
 
@@ -66,10 +58,11 @@ object Main extends App with Job {
   override val inputDF: DataFrame = reader.asInstanceOf[ReaderImpl].readFromProperties()
   override val processedDF: DataFrame = processor.process(inputDF)._1 // Choix du rapport 1 pour satisfaire Job
   inputDF.show(10)
-  //  Récupération des 3 rapports
+
+  // Récupère les 3 rapports résultants du traitement
   val (report1, report2, report3) = processor.process(inputDF)
 
-  // Écriture des 3 rapports avec des suffixes
+  // Écrit les 3 rapports dans des fichiers distincts avec des suffixes et des noms logiques
   writer.write(report1, "overwrite", dst_path + "_report1", "salaire_moyen_par_sexe")
   writer.write(report2, "overwrite", dst_path + "_report2", "salaire_moyen_par_tranche_age_et_sexe")
   writer.write(report3, "overwrite", dst_path + "_report3", "top_10_regions_mieux_payees")
