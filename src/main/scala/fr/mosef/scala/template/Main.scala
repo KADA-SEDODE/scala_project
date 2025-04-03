@@ -11,7 +11,7 @@ import org.apache.spark.SparkConf
 import com.globalmentor.apache.hadoop.fs.BareLocalFileSystem
 import org.apache.hadoop.fs.FileSystem
 
-/*object Main extends App with Job {
+object Main extends App with Job {
 
   val cliArgs = args
   val MASTER_URL: String = try {
@@ -19,7 +19,7 @@ import org.apache.hadoop.fs.FileSystem
   } catch {
     case e: java.lang.ArrayIndexOutOfBoundsException => "local[1]"
   }
-  val SRC_PATH: String = try {
+  /*val SRC_PATH: String = try {
     cliArgs(1)
   } catch {
     case e: java.lang.ArrayIndexOutOfBoundsException => {
@@ -33,7 +33,7 @@ import org.apache.hadoop.fs.FileSystem
     case e: java.lang.ArrayIndexOutOfBoundsException => {
       "./default/output-writer"
     }
-  }
+  }*/
 
   val conf = new SparkConf()
   conf.set("spark.driver.memory", "64M")
@@ -46,47 +46,32 @@ import org.apache.hadoop.fs.FileSystem
     .appName("Scala Template")
     .enableHiveSupport()
     .getOrCreate()
-  
-  sparkSession
-    .sparkContext
-    .hadoopConfiguration
-    .setClass("fs.file.impl",  classOf[BareLocalFileSystem], classOf[FileSystem])
-
-
-  val reader: Reader = new ReaderImpl(sparkSession)
-  val processor: Processor = new ProcessorImpl()
-  val writer: Writer = new Writer()
-  val src_path = SRC_PATH
-  val dst_path = DST_PATH
-
-  val inputDF: DataFrame = reader.read(src_path)
-  val processedDF: DataFrame = processor.process(inputDF)
-  writer.write(processedDF, "overwrite", dst_path)
-
-}*/
-
-/*object Main extends App {
-  print("hello word")
-}*/
-
-object Main extends App {
-
-  val conf = new SparkConf()
-  conf.set("spark.driver.memory", "64M")
-  conf.set("spark.testing.memory", "471859200")
-
-  val sparkSession = SparkSession
-    .builder
-    .master("local")
-    .config(conf)
-    .appName("Scala Template")
-    .enableHiveSupport()
-    .getOrCreate()
 
   sparkSession
     .sparkContext
     .hadoopConfiguration
     .setClass("fs.file.impl",  classOf[BareLocalFileSystem], classOf[FileSystem])
 
-  print(sparkSession.sql("SELECT 'A'").show())
+
+  override val reader: Reader = new ReaderImpl(sparkSession)
+  override val processor: Processor = new ProcessorImpl()
+  override val writer: Writer = new Writer()
+  /*  val src_path = SRC_PATH
+    val dst_path = DST_PATH*/
+  override val src_path: String = reader.asInstanceOf[ReaderImpl].getInputPathFromProperties()
+  override val dst_path: String = reader.asInstanceOf[ReaderImpl].getOutputPathFromProperties()
+
+
+  /*  val inputDF: DataFrame = reader.read(src_path)*/
+  override val inputDF: DataFrame = reader.asInstanceOf[ReaderImpl].readFromProperties()
+  override val processedDF: DataFrame = processor.process(inputDF)._1 // Choix du rapport 1 pour satisfaire Job
+  inputDF.show(10)
+  //  Récupération des 3 rapports
+  val (report1, report2, report3) = processor.process(inputDF)
+
+  // Écriture des 3 rapports avec des suffixes
+  writer.write(report1, "overwrite", dst_path + "_report1", "salaire_moyen_par_sexe")
+  writer.write(report2, "overwrite", dst_path + "_report2", "salaire_moyen_par_tranche_age_et_sexe")
+  writer.write(report3, "overwrite", dst_path + "_report3", "top_10_regions_mieux_payees")
+
 }

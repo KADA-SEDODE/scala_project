@@ -88,7 +88,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>fr.mosef.scala.template.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

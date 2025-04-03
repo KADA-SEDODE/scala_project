@@ -4,6 +4,6 @@ import org.apache.spark.sql.DataFrame
 
 trait Processor {
 
-  def process(inputDF: DataFrame) : DataFrame
+  def process(inputDF: DataFrame) : (DataFrame, DataFrame, DataFrame)
 
 }
