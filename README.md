@@ -115,7 +115,7 @@ spark-submit --class fr.mosef.scala.template.Main target/scala_template-1.5-jar-
 sbt "runMain fr.mosef.scala.template.utils.ApiFetcher"
 ```
 
----
+
 
 ## 🚀 Deployment
 
@@ -124,7 +124,7 @@ This project is configured to:
 - **Publish a Maven artifact**
 - Package as a runnable JAR with all dependencies
 
----
+
 
 ## 📂 Output Example
 
@@ -133,7 +133,7 @@ Once executed, the pipeline generates several CSV reports in the `output/` folde
 - `evolution_ecart_salarial_temps.csv`
 - etc.
 
----
+
 
 ## 📚 Educational Purpose
 
@@ -146,7 +146,7 @@ Once executed, the pipeline generates several CSV reports in the `output/` folde
 
 ## 👨‍💻 Author
 
-**Marvin KADA SEDODE**  
+**Marvin KADA_SEDODE**  
 **Samanta LAMOUR**
 **Bethuel ASSE**  
 **Dimitri GUIFT**
