@@ -60,11 +60,18 @@ object Main extends App with Job {
   inputDF.show(10)
 
   // Récupère les 3 rapports résultants du traitement
-  val (report1, report2, report3) = processor.process(inputDF)
+  val (report1, report2, report3, report4, report5) = processor.process(inputDF)
+
 
   // Écrit les 3 rapports dans des fichiers distincts avec des suffixes et des noms logiques
   writer.write(report1, "overwrite", dst_path + "_report1", "salaire_moyen_par_sexe")
   writer.write(report2, "overwrite", dst_path + "_report2", "salaire_moyen_par_tranche_age_et_sexe")
   writer.write(report3, "overwrite", dst_path + "_report3", "top_10_regions_mieux_payees")
+  writer.write(report4, "overwrite", dst_path + "_report4", "ecart_salarial_par_csp")
+  writer.write(report5, "overwrite", dst_path + "_report5", "evolution_ecart_salarial_temps")
+
 
 }
+
+
+
