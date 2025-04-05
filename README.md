@@ -143,7 +143,6 @@ Once executed, the pipeline generates several CSV reports in the `output/` folde
 - Integration of real-world Open Data
 - Deployment with CI/CD (GitHub Actions + Maven)
 
----
 
 ## 👨‍💻 Author
 
