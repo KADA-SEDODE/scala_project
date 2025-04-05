@@ -1,7 +1,5 @@
 
 
-
-```markdown
 # 🚀 Scala Data Pipeline – Open Data Project
 
 > **Scala Template** is a modular data engineering application built with Scala and Spark.  
