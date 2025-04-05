@@ -145,6 +145,6 @@ Once executed, the pipeline generates several CSV reports in the `output/` folde
 ## 👨‍💻 Author
 
 **Marvin KADA_SEDODE**  
-**Samanta LAMOUR**
-**Dimitri GUIFT**
+**Samanta LAMOUR**  
 **Bethuel ASSE**  
+**Dimitri GUIFT**
