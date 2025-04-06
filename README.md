@@ -34,10 +34,11 @@ scala_template/
 │       │   └── Main.scala
 │       └── resources/
 │           ├── application.properties
-│           ├── salaires_france_2015_2025.csv
 │           └── salaires_api.csv
 ├── output/
 │   └── (exported CSV reports)
+│── data/
+│   └── (salaires_france_2015_2025.csv)
 ├── .github/
 ├── pom.xml
 └── README.md
