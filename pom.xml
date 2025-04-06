@@ -10,7 +10,7 @@
         <encoding>UTF-8</encoding>
     </properties>
     <!-- Maven profiles allow you to support both Scala 2.10, 2.11 and Scala 2.12 with
-      the right dependencies for modules specified for each version separately -->
+      the right dependencies for modules spec2ified for each version separately -->
     <profiles>
         <profile>
             <id>scala-2.13</id>
